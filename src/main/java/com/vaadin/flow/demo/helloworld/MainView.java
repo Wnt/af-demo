@@ -18,6 +18,7 @@ package com.vaadin.flow.demo.helloworld;
 import com.vaadin.router.Route;
 import com.vaadin.ui.button.Button;
 import com.vaadin.ui.common.HtmlImport;
+import com.vaadin.ui.html.Label;
 import com.vaadin.ui.layout.VerticalLayout;
 
 /**
@@ -27,12 +28,26 @@ import com.vaadin.ui.layout.VerticalLayout;
 @Route("")
 public class MainView extends VerticalLayout {
 
-    public MainView() {
-    	ArithmeticField arithmeticField = new ArithmeticField();
+	private Button button;
+	private ArithmeticField arithmeticField;
 
-        Button button =  new Button("Click to change field value", event -> arithmeticField.setValue(42));
+	public MainView() {
+		arithmeticField = new ArithmeticField();
+		
+		arithmeticField.setPlaceholder("Input is evaled on change");
 
-        add(button, arithmeticField);
-    }
+		button = new Button("Click to change field value", event -> arithmeticField.setValue("" + 42));
+		Button echoButton = new Button("What's the value?", event -> echo());
+
+		add(button, arithmeticField, echoButton);
+
+		arithmeticField.addValueChangeListener(e -> {
+			add(new Label("Value changed from: '" + e.getOldValue() + "' into '" + e.getValue() + "'"));
+		});
+	}
+
+	private void echo() {
+		add(new Label("Value is: '" + arithmeticField.getValue() + "'"));
+	}
 
 }
